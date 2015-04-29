@@ -95,7 +95,8 @@ void RenderTarget::clear(const Color& color)
         applyTexture(NULL);
 
         glCheck(glClearColor(color.r / 255.f, color.g / 255.f, color.b / 255.f, color.a / 255.f));
-        glCheck(glClear(GL_COLOR_BUFFER_BIT));
+        glCheck(glStencilMask(~0));
+        glCheck(glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
     }
 }
 
@@ -241,6 +242,10 @@ void RenderTarget::draw(const Vertex* vertices, std::size_t vertexCount,
         if (states.blendMode != m_cache.lastBlendMode)
             applyBlendMode(states.blendMode);
 
+        // Apply the stencil settings
+        if (states.stencilSettings != m_cache.lastStencilSettings)
+            applyStencilSettings(states.stencilSettings);
+
         // Apply the texture
         Uint64 textureId = states.texture ? states.texture->m_cacheId : 0;
         if (textureId != m_cache.lastTextureId)
@@ -371,6 +376,7 @@ void RenderTarget::resetGLStates()
 
         // Apply the default SFML states
         applyBlendMode(BlendAlpha);
+        applyStencilSettings(StencilSettings());
         applyTransform(Transform::Identity);
         applyTexture(NULL);
         if (shaderAvailable)
@@ -460,6 +466,14 @@ void RenderTarget::applyBlendMode(const BlendMode& mode)
     }
 
     m_cache.lastBlendMode = mode;
+}
+
+
+////////////////////////////////////////////////////////////
+void RenderTarget::applyStencilSettings(const StencilSettings& stencilSettings)
+{
+    stencilSettings.apply();
+    m_cache.lastStencilSettings = stencilSettings;
 }
 
 

@@ -34,14 +34,19 @@ namespace sf
 ////////////////////////////////////////////////////////////
 // We cannot use the default constructor here, because it accesses BlendAlpha, which is also global (and dynamically
 // initialized). Initialization order of global objects in different translation units is not defined.
-const RenderStates RenderStates::Default(BlendMode(
-    BlendMode::SrcAlpha, BlendMode::OneMinusSrcAlpha, BlendMode::Add,
-    BlendMode::One, BlendMode::OneMinusSrcAlpha, BlendMode::Add));
+// For similar reasons we need to provide the default stencil settings, and thus all other settings along with it
+const RenderStates RenderStates::Default(
+    BlendMode(BlendMode::SrcAlpha, BlendMode::OneMinusSrcAlpha, BlendMode::Add, BlendMode::One, BlendMode::OneMinusSrcAlpha, BlendMode::Add),
+    StencilSettings(StencilSettings::Always, StencilSettings::Keep, 0, StencilSettings::GreaterEqual, 0, true),
+    Transform(),
+    NULL,
+    NULL);
 
 
 ////////////////////////////////////////////////////////////
 RenderStates::RenderStates() :
 blendMode(BlendAlpha),
+stencilSettings(),
 transform(),
 texture  (NULL),
 shader   (NULL)
@@ -52,6 +57,7 @@ shader   (NULL)
 ////////////////////////////////////////////////////////////
 RenderStates::RenderStates(const Transform& theTransform) :
 blendMode(BlendAlpha),
+stencilSettings(),
 transform(theTransform),
 texture  (NULL),
 shader   (NULL)
@@ -62,6 +68,7 @@ shader   (NULL)
 ////////////////////////////////////////////////////////////
 RenderStates::RenderStates(const BlendMode& theBlendMode) :
 blendMode(theBlendMode),
+stencilSettings(),
 transform(),
 texture  (NULL),
 shader   (NULL)
@@ -70,8 +77,19 @@ shader   (NULL)
 
 
 ////////////////////////////////////////////////////////////
+RenderStates::RenderStates(const StencilSettings& theStencilSettings) :
+blendMode(BlendAlpha),
+stencilSettings(theStencilSettings),
+transform(),
+texture(NULL),
+shader(NULL)
+{}
+
+
+////////////////////////////////////////////////////////////
 RenderStates::RenderStates(const Texture* theTexture) :
 blendMode(BlendAlpha),
+stencilSettings(),
 transform(),
 texture  (theTexture),
 shader   (NULL)
@@ -82,6 +100,7 @@ shader   (NULL)
 ////////////////////////////////////////////////////////////
 RenderStates::RenderStates(const Shader* theShader) :
 blendMode(BlendAlpha),
+stencilSettings(),
 transform(),
 texture  (NULL),
 shader   (theShader)
@@ -93,10 +112,22 @@ shader   (theShader)
 RenderStates::RenderStates(const BlendMode& theBlendMode, const Transform& theTransform,
                            const Texture* theTexture, const Shader* theShader) :
 blendMode(theBlendMode),
+stencilSettings(),
 transform(theTransform),
 texture  (theTexture),
 shader   (theShader)
 {
 }
+
+
+////////////////////////////////////////////////////////////
+RenderStates::RenderStates(const BlendMode& theBlendMode, const StencilSettings& theStencilSettings,
+                           const Transform& theTransform, const Texture* theTexture, const Shader* theShader) :
+blendMode(theBlendMode),
+stencilSettings(theStencilSettings),
+transform(theTransform),
+texture(theTexture),
+shader(theShader)
+{}
 
 } // namespace sf

@@ -38,6 +38,7 @@
 #include <SFML/Graphics/PrimitiveType.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/System/NonCopyable.hpp>
+#include <SFML/Graphics/StencilSettings.hpp>
 
 
 namespace sf
@@ -357,6 +358,14 @@ private:
     void applyBlendMode(const BlendMode& mode);
 
     ////////////////////////////////////////////////////////////
+    /// \brief Apply a new stencil
+    ///
+    /// \param mode Stencil to apply
+    ///
+    ////////////////////////////////////////////////////////////
+    void applyStencilSettings(const StencilSettings& stencil);
+
+    ////////////////////////////////////////////////////////////
     /// \brief Apply a new transform
     ///
     /// \param transform Transform to apply
@@ -402,12 +411,13 @@ private:
     {
         enum {VertexCacheSize = 4};
 
-        bool      glStatesSet;    ///< Are our internal GL states set yet?
-        bool      viewChanged;    ///< Has the current view changed since last draw?
-        BlendMode lastBlendMode;  ///< Cached blending mode
-        Uint64    lastTextureId;  ///< Cached texture
-        bool      useVertexCache; ///< Did we previously use the vertex cache?
-        Vertex    vertexCache[VertexCacheSize]; ///< Pre-transformed vertices cache
+        bool              glStatesSet;                  ///< Are our internal GL states set yet?
+        bool              viewChanged;                  ///< Has the current view changed since last draw?
+        BlendMode         lastBlendMode;                ///< Cached blending mode
+        StencilSettings   lastStencilSettings;          ///< Cached stencil
+        Uint64            lastTextureId;                ///< Cached texture
+        bool              useVertexCache;               ///< Did we previously use the vertex cache?
+        Vertex            vertexCache[VertexCacheSize]; ///< Pre-transformed vertices cache
     };
 
     ////////////////////////////////////////////////////////////
