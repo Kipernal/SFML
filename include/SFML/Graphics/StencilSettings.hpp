@@ -161,9 +161,10 @@ SFML_GRAPHICS_API bool operator !=(const StencilSettings& left, const StencilSet
 ////////////////////////////////////////////////////////////
 // Commonly used stencils
 ////////////////////////////////////////////////////////////
-SFML_GRAPHICS_API extern const StencilSettings StencilCreate;    ///< Draw onto a stencil instead of the screen
-SFML_GRAPHICS_API extern const StencilSettings StencilTrace;     ///< Draw only where there's no stencil
-SFML_GRAPHICS_API extern const StencilSettings StencilDisable;   ///< "Turns off" the stencil and draws normally
+SFML_GRAPHICS_API extern const StencilSettings StencilCreate;       ///< Draw onto a stencil instead of the screen
+SFML_GRAPHICS_API extern const StencilSettings StencilTrace;        ///< Draw only where a stencil's been drawn
+SFML_GRAPHICS_API extern const StencilSettings StencilInverseTrace; ///< Draw only where a stencil hasn't been drawn
+SFML_GRAPHICS_API extern const StencilSettings StencilDisable;      ///< Same as default; "turns off" the stencil and draws normally
 
 
 } // namespace sf

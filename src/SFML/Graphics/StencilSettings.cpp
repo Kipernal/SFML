@@ -40,6 +40,7 @@ namespace sf
 ////////////////////////////////////////////////////////////
 const StencilSettings StencilCreate(StencilSettings::Always, StencilSettings::Replace, 1, StencilSettings::GreaterEqual, 255, false);
 const StencilSettings StencilTrace(StencilSettings::Equal, StencilSettings::Keep, 1, StencilSettings::Always, 255, true);
+const StencilSettings StencilInverseTrace(StencilSettings::Equal, StencilSettings::Keep, 0, StencilSettings::Always, 255, true);
 const StencilSettings StencilDisable;
 
 
