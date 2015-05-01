@@ -117,17 +117,17 @@ bool RenderTextureImplFBO::create(unsigned int width, unsigned int height, unsig
     if (stencilBuffer)
     {
         GLuint stencil = 0;
-	glCheck(GLEXT_glGenRenderbuffers(1, &stencil));
-	m_stencilBuffer = static_cast<unsigned int>(stencil);
-	if (!m_stencilBuffer)
-	{
-		err() << "Impossible to create render texture (failed to create the attached stencil buffer)" << std::endl;
-		return false;
-	}
+        glCheck(GLEXT_glGenRenderbuffers(1, &stencil));
+        m_stencilBuffer = static_cast<unsigned int>(stencil);
+        if (!m_stencilBuffer)
+        {
+            err() << "Impossible to create render texture (failed to create the attached stencil buffer)" << std::endl;
+            return false;
+        }
 
-	glCheck(GLEXT_glBindRenderbuffer(GLEXT_GL_RENDERBUFFER, m_stencilBuffer));
-	glCheck(GLEXT_glRenderbufferStorage(GLEXT_GL_RENDERBUFFER, GLEXT_GL_STENCIL_INDEX, width, height));
-	glCheck(glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GLEXT_GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER_EXT, m_stencilBuffer));
+        glCheck(GLEXT_glBindRenderbuffer(GLEXT_GL_RENDERBUFFER, m_stencilBuffer));
+        glCheck(GLEXT_glRenderbufferStorage(GLEXT_GL_RENDERBUFFER, GLEXT_GL_STENCIL_INDEX, width, height));
+        glCheck(glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GLEXT_GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER_EXT, m_stencilBuffer));
     }
 
     // Link the texture to the frame buffer
