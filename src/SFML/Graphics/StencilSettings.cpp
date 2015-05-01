@@ -38,7 +38,7 @@ namespace sf
 ////////////////////////////////////////////////////////////
 // Commonly used stencil settings
 ////////////////////////////////////////////////////////////
-const StencilSettings StencilCreate(StencilSettings::Always, StencilSettings::Replace, 1, StencilSettings::Equal, 255, false);
+const StencilSettings StencilCreate(StencilSettings::Always, StencilSettings::Replace, 1, StencilSettings::GreaterEqual, 255, false);
 const StencilSettings StencilTrace(StencilSettings::Equal, StencilSettings::Keep, 1, StencilSettings::Always, 255, true);
 const StencilSettings StencilDisable;
 

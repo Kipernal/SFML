@@ -83,15 +83,6 @@ namespace sf
         StencilSettings();
 
         ////////////////////////////////////////////////////////////
-        /// \brief Apply the stencil settings.
-        ///
-        /// Thus function applies the relevant OpenGL operations based on the
-        /// StencilSetting's member variables.
-        ///
-        ////////////////////////////////////////////////////////////
-        void apply() const;
-
-        ////////////////////////////////////////////////////////////
         /// \brief Construct the stencil settings given the factors and equation.
         ///
         /// \param stencilFunction        Specifies the test that determines if we write to the stencil buffer
@@ -106,6 +97,15 @@ namespace sf
                         Function alphaFunction, Uint8 alphaReference, bool drawSelf);
 
         ////////////////////////////////////////////////////////////
+        /// \brief Apply the stencil settings.
+        ///
+        /// Thus function applies the relevant OpenGL operations based on the
+        /// StencilSetting's member variables.
+        ///
+        ////////////////////////////////////////////////////////////
+        void apply() const;
+
+        ////////////////////////////////////////////////////////////
         // Member Data
         ////////////////////////////////////////////////////////////
         Operation stencilOperation;    ///< The operation we're using when writing to the stencil buffer 
@@ -118,7 +118,6 @@ namespace sf
 
 
     private:
-
 
         ////////////////////////////////////////////////////////////
         /// \brief Convert an Operation constant to the corresponding OpenGL constant.

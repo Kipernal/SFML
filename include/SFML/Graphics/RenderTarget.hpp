@@ -64,11 +64,26 @@ public:
     ///
     /// This function is usually called once every frame,
     /// to clear the previous contents of the target.
+    /// This function also clears the stencil buffer.
     ///
     /// \param color Fill color to use to clear the render target
     ///
     ////////////////////////////////////////////////////////////
     void clear(const Color& color = Color(0, 0, 0, 255));
+
+
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Clear the stencil buffer
+    ///
+    /// This function clears the stencil buffer without clearing
+    /// the actual target's colors. In effect this is like
+    /// destroying your old stencil and making a new one.
+    ///
+    ////////////////////////////////////////////////////////////
+    void clearStencilBuffer();
+
+
 
     ////////////////////////////////////////////////////////////
     /// \brief Change the current active view

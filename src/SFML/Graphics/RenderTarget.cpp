@@ -102,6 +102,18 @@ void RenderTarget::clear(const Color& color)
 
 
 ////////////////////////////////////////////////////////////
+void RenderTarget::clearStencilBuffer()
+{
+    if (activate(true))
+    {
+        applyTexture(NULL);
+        glCheck(glStencilMask(~0));
+        glCheck(glClear(GL_STENCIL_BUFFER_BIT));
+    }
+}
+
+
+////////////////////////////////////////////////////////////
 void RenderTarget::setView(const View& view)
 {
     m_view = view;
