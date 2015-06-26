@@ -38,6 +38,7 @@
 #include <SFML/Graphics/PrimitiveType.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/System/NonCopyable.hpp>
+#include <SFML/Graphics/StencilSettings.hpp>
 
 
 namespace sf
@@ -63,11 +64,26 @@ public:
     ///
     /// This function is usually called once every frame,
     /// to clear the previous contents of the target.
+    /// This function also clears the stencil buffer.
     ///
     /// \param color Fill color to use to clear the render target
     ///
     ////////////////////////////////////////////////////////////
     void clear(const Color& color = Color(0, 0, 0, 255));
+
+
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Clear the stencil buffer
+    ///
+    /// This function clears the stencil buffer without clearing
+    /// the actual target's colors. In effect this is like
+    /// destroying your old stencil and making a new one.
+    ///
+    ////////////////////////////////////////////////////////////
+    void clearStencilBuffer();
+
+
 
     ////////////////////////////////////////////////////////////
     /// \brief Change the current active view
@@ -357,6 +373,14 @@ private:
     void applyBlendMode(const BlendMode& mode);
 
     ////////////////////////////////////////////////////////////
+    /// \brief Apply a new stencil
+    ///
+    /// \param mode Stencil to apply
+    ///
+    ////////////////////////////////////////////////////////////
+    void applyStencilSettings(const StencilSettings& stencil);
+
+    ////////////////////////////////////////////////////////////
     /// \brief Apply a new transform
     ///
     /// \param transform Transform to apply
@@ -402,12 +426,13 @@ private:
     {
         enum {VertexCacheSize = 4};
 
-        bool      glStatesSet;    ///< Are our internal GL states set yet?
-        bool      viewChanged;    ///< Has the current view changed since last draw?
-        BlendMode lastBlendMode;  ///< Cached blending mode
-        Uint64    lastTextureId;  ///< Cached texture
-        bool      useVertexCache; ///< Did we previously use the vertex cache?
-        Vertex    vertexCache[VertexCacheSize]; ///< Pre-transformed vertices cache
+        bool              glStatesSet;                  ///< Are our internal GL states set yet?
+        bool              viewChanged;                  ///< Has the current view changed since last draw?
+        BlendMode         lastBlendMode;                ///< Cached blending mode
+        StencilSettings   lastStencilSettings;          ///< Cached stencil
+        Uint64            lastTextureId;                ///< Cached texture
+        bool              useVertexCache;               ///< Did we previously use the vertex cache?
+        Vertex            vertexCache[VertexCacheSize]; ///< Pre-transformed vertices cache
     };
 
     ////////////////////////////////////////////////////////////

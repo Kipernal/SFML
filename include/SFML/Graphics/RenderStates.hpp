@@ -31,6 +31,7 @@
 #include <SFML/Graphics/Export.hpp>
 #include <SFML/Graphics/BlendMode.hpp>
 #include <SFML/Graphics/Transform.hpp>
+#include <SFML/Graphics/StencilSettings.hpp>
 
 
 namespace sf
@@ -53,6 +54,7 @@ public:
     /// to using sf::RenderStates::Default.
     /// The default set defines:
     /// \li the BlendAlpha blend mode
+    /// \li the default StencilSettings (no stencil)
     /// \li the identity transform
     /// \li a null texture
     /// \li a null shader
@@ -67,6 +69,14 @@ public:
     ///
     ////////////////////////////////////////////////////////////
     RenderStates(const BlendMode& theBlendMode);
+
+    ////////////////////////////////////////////////////////////
+    /// \brief Construct a default set of render states with custom stencil settings
+    ///
+    /// \param theStencilSettings Stencil settings to use
+    ///
+    ////////////////////////////////////////////////////////////
+    RenderStates(const StencilSettings& theStencilSettings);
 
     ////////////////////////////////////////////////////////////
     /// \brief Construct a default set of render states with a custom transform
@@ -93,7 +103,7 @@ public:
     RenderStates(const Shader* theShader);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Construct a set of render states with all its attributes
+    /// \brief Construct a set of render states with most its attributes
     ///
     /// \param theBlendMode Blend mode to use
     /// \param theTransform Transform to use
@@ -105,6 +115,19 @@ public:
                  const Texture* theTexture, const Shader* theShader);
 
     ////////////////////////////////////////////////////////////
+    /// \brief Construct a set of render states with all its attributes
+    ///
+    /// \param theBlendMode       Blend mode to use
+    /// \param theStencilSettings Stencil settings to use
+    /// \param theTransform       Transform to use
+    /// \param theTexture         Texture to use
+    /// \param theShader          Shader to use
+    ///
+    ////////////////////////////////////////////////////////////
+    RenderStates(const BlendMode& theBlendMode, const StencilSettings& theStencilSettings, 
+                 const Transform& theTransform, const Texture* theTexture, const Shader* theShader);
+
+    ////////////////////////////////////////////////////////////
     // Static member data
     ////////////////////////////////////////////////////////////
     static const RenderStates Default; ///< Special instance holding the default render states
@@ -112,10 +135,11 @@ public:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    BlendMode      blendMode; ///< Blending mode
-    Transform      transform; ///< Transform
-    const Texture* texture;   ///< Texture
-    const Shader*  shader;    ///< Shader
+    BlendMode       blendMode;       ///< Blending mode
+    StencilSettings stencilSettings; ///< Stencil settings
+    Transform       transform;       ///< Transform
+    const Texture*  texture;         ///< Texture
+    const Shader*   shader;          ///< Shader
 };
 
 } // namespace sf

@@ -118,7 +118,11 @@
 
     // Core since 1.1
     #define GLEXT_GL_DEPTH_COMPONENT                  GL_DEPTH_COMPONENT
+<<<<<<< HEAD
+    #define GLEXT_GL_STENCIL_INDEX                    GL_STENCIL_INDEX
+=======
     #define GLEXT_GL_CLAMP                            GL_CLAMP
+>>>>>>> 80214d1cb916ae5f49c63ade4c167369faab9b9e
 
     // The following extensions are listed chronologically
     // Extension macro first, followed by tokens then
@@ -209,6 +213,7 @@
     #define GLEXT_GL_RENDERBUFFER                     GL_RENDERBUFFER_EXT
     #define GLEXT_GL_COLOR_ATTACHMENT0                GL_COLOR_ATTACHMENT0_EXT
     #define GLEXT_GL_DEPTH_ATTACHMENT                 GL_DEPTH_ATTACHMENT_EXT
+    #define GLEXT_GL_STENCIL_ATTACHMENT               GL_STENCIL_ATTACHMENT_EXT
     #define GLEXT_GL_FRAMEBUFFER_COMPLETE             GL_FRAMEBUFFER_COMPLETE_EXT
     #define GLEXT_GL_FRAMEBUFFER_BINDING              GL_FRAMEBUFFER_BINDING_EXT
     #define GLEXT_GL_INVALID_FRAMEBUFFER_OPERATION    GL_INVALID_FRAMEBUFFER_OPERATION_EXT
