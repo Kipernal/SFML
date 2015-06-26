@@ -72,26 +72,28 @@ namespace sf
 {
 ////////////////////////////////////////////////////////////
 Texture::Texture() :
-m_size         (0, 0),
-m_actualSize   (0, 0),
-m_texture      (0),
-m_isSmooth     (false),
-m_isRepeated   (false),
-m_pixelsFlipped(false),
-m_cacheId      (getUniqueId())
+m_size                (0, 0),
+m_actualSize          (0, 0),
+m_texture             (0),
+m_isSmooth            (false),
+m_isRepeated          (false),
+m_pixelsFlipped       (false),
+m_ownedByRenderTexture(false),
+m_cacheId             (getUniqueId())
 {
 }
 
 
 ////////////////////////////////////////////////////////////
 Texture::Texture(const Texture& copy) :
-m_size         (0, 0),
-m_actualSize   (0, 0),
-m_texture      (0),
-m_isSmooth     (copy.m_isSmooth),
-m_isRepeated   (copy.m_isRepeated),
-m_pixelsFlipped(false),
-m_cacheId      (getUniqueId())
+m_size                (0, 0),
+m_actualSize          (0, 0),
+m_texture             (0),
+m_isSmooth            (copy.m_isSmooth),
+m_isRepeated          (copy.m_isRepeated),
+m_pixelsFlipped       (false),
+m_ownedByRenderTexture(false),
+m_cacheId             (getUniqueId())
 {
     if (copy.m_texture)
         loadFromImage(copy.copyToImage());
@@ -137,10 +139,11 @@ bool Texture::create(unsigned int width, unsigned int height)
     }
 
     // All the validity checks passed, we can store the new texture settings
-    m_size.x        = width;
-    m_size.y        = height;
-    m_actualSize    = actualSize;
-    m_pixelsFlipped = false;
+    m_size.x               = width;
+    m_size.y               = height;
+    m_actualSize           = actualSize;
+    m_pixelsFlipped        = false;
+    m_ownedByRenderTexture = false;
 
     ensureGlContext();
 
@@ -582,12 +585,13 @@ Texture& Texture::operator =(const Texture& right)
 {
     Texture temp(right);
 
-    std::swap(m_size,          temp.m_size);
-    std::swap(m_actualSize,    temp.m_actualSize);
-    std::swap(m_texture,       temp.m_texture);
-    std::swap(m_isSmooth,      temp.m_isSmooth);
-    std::swap(m_isRepeated,    temp.m_isRepeated);
-    std::swap(m_pixelsFlipped, temp.m_pixelsFlipped);
+    std::swap(m_size,                 temp.m_size);
+    std::swap(m_actualSize,           temp.m_actualSize);
+    std::swap(m_texture,              temp.m_texture);
+    std::swap(m_isSmooth,             temp.m_isSmooth);
+    std::swap(m_isRepeated,           temp.m_isRepeated);
+    std::swap(m_pixelsFlipped,        temp.m_pixelsFlipped);
+    std::swap(m_ownedByRenderTexture, temp.m_ownedByRenderTexture);
     m_cacheId = getUniqueId();
 
     return *this;

@@ -503,13 +503,14 @@ private:
     ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
-    Vector2u     m_size;          ///< Public texture size
-    Vector2u     m_actualSize;    ///< Actual texture size (can be greater than public size because of padding)
-    unsigned int m_texture;       ///< Internal texture identifier
-    bool         m_isSmooth;      ///< Status of the smooth filter
-    bool         m_isRepeated;    ///< Is the texture in repeat mode?
-    mutable bool m_pixelsFlipped; ///< To work around the inconsistency in Y orientation
-    Uint64       m_cacheId;       ///< Unique number that identifies the texture to the render target's cache
+    Vector2u     m_size;                 ///< Public texture size
+    Vector2u     m_actualSize;           ///< Actual texture size (can be greater than public size because of padding)
+    unsigned int m_texture;              ///< Internal texture identifier
+    bool         m_isSmooth;             ///< Status of the smooth filter
+    bool         m_isRepeated;           ///< Is the texture in repeat mode?
+    mutable bool m_pixelsFlipped;        ///< To work around the inconsistency in Y orientation
+    bool         m_ownedByRenderTexture; ///< Indicates if this texture is owned by a RenderTexture
+    Uint64       m_cacheId;              ///< Unique number that identifies the texture to the render target's cache
 };
 
 } // namespace sf

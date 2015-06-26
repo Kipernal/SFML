@@ -281,6 +281,14 @@ void RenderTarget::draw(const Vertex* vertices, std::size_t vertexCount,
         if (states.shader)
             applyShader(NULL);
 
+        // If the texture we used to draw belonged to a RenderTexture, then forcibly unbind that texture.
+        // This prevents a bug where some drivers do not clear RenderTextures properly.
+        if (states.texture && states.texture->m_ownedByRenderTexture)
+        {
+            Texture::bind(NULL);
+            m_cache.lastTextureId = 0;
+        }
+
         // Update the cache
         m_cache.useVertexCache = useVertexCache;
     }

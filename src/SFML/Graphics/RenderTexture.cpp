@@ -61,6 +61,9 @@ bool RenderTexture::create(unsigned int width, unsigned int height, bool depthBu
     // We disable smoothing by default for render textures
     setSmooth(false);
 
+    // Mark the texture as being owned by a RenderTexture
+    m_texture.m_ownedByRenderTexture = true;
+
     // Create the implementation
     delete m_impl;
     if (priv::RenderTextureImplFBO::isAvailable())
