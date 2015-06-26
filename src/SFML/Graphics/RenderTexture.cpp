@@ -61,15 +61,15 @@ bool RenderTexture::create(unsigned int width, unsigned int height, bool depthBu
     // We disable smoothing by default for render textures
     setSmooth(false);
 
-    // Mark the texture as being owned by a RenderTexture
-    m_texture.m_ownedByRenderTexture = true;
-
     // Create the implementation
     delete m_impl;
     if (priv::RenderTextureImplFBO::isAvailable())
     {
         // Use frame-buffer object (FBO)
         m_impl = new priv::RenderTextureImplFBO;
+
+        // Mark the texture as being a framebuffer object attachment
+        m_texture.m_fboAttachment = true;
     }
     else
     {
