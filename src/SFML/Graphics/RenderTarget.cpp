@@ -285,8 +285,7 @@ void RenderTarget::draw(const Vertex* vertices, std::size_t vertexCount,
         // This prevents a bug where some drivers do not clear RenderTextures properly.
         if (states.texture && states.texture->m_fboAttachment)
         {
-            Texture::bind(NULL);
-            m_cache.lastTextureId = 0;
+            applyTexture(NULL);
         }
 
         // Update the cache
