@@ -69,7 +69,7 @@ public:
     /// \param color Fill color to use to clear the render target
     ///
     ////////////////////////////////////////////////////////////
-    void clear(const Color& color = Color(0, 0, 0, 255));
+    virtual void clear(const Color& color = Color(0, 0, 0, 255));
 
 
 
@@ -260,8 +260,8 @@ public:
     /// \param states      Render states to use for drawing
     ///
     ////////////////////////////////////////////////////////////
-    void draw(const Vertex* vertices, std::size_t vertexCount,
-              PrimitiveType type, const RenderStates& states = RenderStates::Default);
+    virtual void draw(const Vertex* vertices, std::size_t vertexCount,
+                      PrimitiveType type, const RenderStates& states = RenderStates::Default);
 
     ////////////////////////////////////////////////////////////
     /// \brief Return the size of the rendering region of the target
@@ -356,6 +356,25 @@ protected:
     ////////////////////////////////////////////////////////////
     void initialize();
 
+    ////////////////////////////////////////////////////////////
+    /// \brief Render states cache
+    ///
+    ////////////////////////////////////////////////////////////
+    struct StatesCache
+    {
+        enum { VertexCacheSize = 4 };
+
+        bool      glStatesSet;                  ///< Are our internal GL states set yet?
+        bool      viewChanged;                  ///< Has the current view changed since last draw?
+        BlendMode lastBlendMode;                ///< Cached blending mode
+        StencilSettings   lastStencilSettings;          ///< Cached stencil
+        Uint64    lastTextureId;                ///< Cached texture
+        bool      useVertexCache;               ///< Did we previously use the vertex cache?
+        Vertex    vertexCache[VertexCacheSize]; ///< Pre-transformed vertices cache
+    };
+
+    StatesCache m_cache;       ///< Render states cache
+
 private:
 
     ////////////////////////////////////////////////////////////
@@ -419,28 +438,10 @@ private:
     virtual bool activate(bool active) = 0;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Render states cache
-    ///
-    ////////////////////////////////////////////////////////////
-    struct StatesCache
-    {
-        enum {VertexCacheSize = 4};
-
-        bool              glStatesSet;                  ///< Are our internal GL states set yet?
-        bool              viewChanged;                  ///< Has the current view changed since last draw?
-        BlendMode         lastBlendMode;                ///< Cached blending mode
-        StencilSettings   lastStencilSettings;          ///< Cached stencil
-        Uint64            lastTextureId;                ///< Cached texture
-        bool              useVertexCache;               ///< Did we previously use the vertex cache?
-        Vertex            vertexCache[VertexCacheSize]; ///< Pre-transformed vertices cache
-    };
-
-    ////////////////////////////////////////////////////////////
     // Member data
     ////////////////////////////////////////////////////////////
     View        m_defaultView; ///< Default view
     View        m_view;        ///< Current view
-    StatesCache m_cache;       ///< Render states cache
 };
 
 } // namespace sf
