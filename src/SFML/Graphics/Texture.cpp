@@ -58,7 +58,15 @@ namespace
         // Create a temporary context in case the user queries
         // the size before a GlResource is created, thus
         // initializing the shared context
-        sf::Context context;
+        if (!sf::Context::getActiveContext())
+        {
+            sf::Context context;
+
+            GLint size;
+            glCheck(glGetIntegerv(GL_MAX_TEXTURE_SIZE, &size));
+
+            return static_cast<unsigned int>(size);
+        }
 
         GLint size;
         glCheck(glGetIntegerv(GL_MAX_TEXTURE_SIZE, &size));
@@ -76,8 +84,10 @@ m_size         (0, 0),
 m_actualSize   (0, 0),
 m_texture      (0),
 m_isSmooth     (false),
+m_sRgb         (false),
 m_isRepeated   (false),
 m_pixelsFlipped(false),
+m_fboAttachment(false),
 m_cacheId      (getUniqueId())
 {
 }
@@ -89,8 +99,10 @@ m_size         (0, 0),
 m_actualSize   (0, 0),
 m_texture      (0),
 m_isSmooth     (copy.m_isSmooth),
+m_sRgb         (copy.m_sRgb),
 m_isRepeated   (copy.m_isRepeated),
 m_pixelsFlipped(false),
+m_fboAttachment(false),
 m_cacheId      (getUniqueId())
 {
     if (copy.m_texture)
@@ -141,6 +153,7 @@ bool Texture::create(unsigned int width, unsigned int height)
     m_size.y        = height;
     m_actualSize    = actualSize;
     m_pixelsFlipped = false;
+    m_fboAttachment = false;
 
     ensureGlContext();
 
@@ -158,7 +171,9 @@ bool Texture::create(unsigned int width, unsigned int height)
     // Make sure that the current texture binding will be preserved
     priv::TextureSaver save;
 
-    if (!m_isRepeated && !GLEXT_texture_edge_clamp)
+    static bool textureEdgeClamp = GLEXT_texture_edge_clamp || GLEXT_EXT_texture_edge_clamp;
+
+    if (!m_isRepeated && !textureEdgeClamp)
     {
         static bool warned = false;
 
@@ -172,11 +187,32 @@ bool Texture::create(unsigned int width, unsigned int height)
         }
     }
 
+    static bool textureSrgb = GLEXT_texture_sRGB;
+
+    if (m_sRgb && !textureSrgb)
+    {
+        static bool warned = false;
+
+        if (!warned)
+        {
+#ifndef SFML_OPENGL_ES
+            err() << "OpenGL extension EXT_texture_sRGB unavailable" << std::endl;
+#else
+            err() << "OpenGL ES extension EXT_sRGB unavailable" << std::endl;
+#endif
+            err() << "Automatic sRGB to linear conversion disabled" << std::endl;
+
+            warned = true;
+        }
+
+        m_sRgb = false;
+    }
+
     // Initialize the texture
     glCheck(glBindTexture(GL_TEXTURE_2D, m_texture));
-    glCheck(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_actualSize.x, m_actualSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_isRepeated ? GL_REPEAT : (GLEXT_texture_edge_clamp ? GLEXT_GL_CLAMP_TO_EDGE : GLEXT_GL_CLAMP)));
-    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_isRepeated ? GL_REPEAT : (GLEXT_texture_edge_clamp ? GLEXT_GL_CLAMP_TO_EDGE : GLEXT_GL_CLAMP)));
+    glCheck(glTexImage2D(GL_TEXTURE_2D, 0, (m_sRgb ? GLEXT_GL_SRGB8_ALPHA8 : GL_RGBA), m_actualSize.x, m_actualSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_isRepeated ? GL_REPEAT : (textureEdgeClamp ? GLEXT_GL_CLAMP_TO_EDGE : GLEXT_GL_CLAMP)));
+    glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_isRepeated ? GL_REPEAT : (textureEdgeClamp ? GLEXT_GL_CLAMP_TO_EDGE : GLEXT_GL_CLAMP)));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_isSmooth ? GL_LINEAR : GL_NEAREST));
     glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, m_isSmooth ? GL_LINEAR : GL_NEAREST));
     m_cacheId = getUniqueId();
@@ -467,6 +503,20 @@ bool Texture::isSmooth() const
 
 
 ////////////////////////////////////////////////////////////
+void Texture::setSrgb(bool sRgb)
+{
+    m_sRgb = sRgb;
+}
+
+
+////////////////////////////////////////////////////////////
+bool Texture::isSrgb() const
+{
+    return m_sRgb;
+}
+
+
+////////////////////////////////////////////////////////////
 void Texture::setRepeated(bool repeated)
 {
     if (repeated != m_isRepeated)
@@ -480,7 +530,9 @@ void Texture::setRepeated(bool repeated)
             // Make sure that the current texture binding will be preserved
             priv::TextureSaver save;
 
-            if (!m_isRepeated && !GLEXT_texture_edge_clamp)
+            static bool textureEdgeClamp = GLEXT_texture_edge_clamp || GLEXT_EXT_texture_edge_clamp;
+
+            if (!m_isRepeated && !textureEdgeClamp)
             {
                 static bool warned = false;
 
@@ -495,8 +547,8 @@ void Texture::setRepeated(bool repeated)
             }
 
             glCheck(glBindTexture(GL_TEXTURE_2D, m_texture));
-            glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_isRepeated ? GL_REPEAT : (GLEXT_texture_edge_clamp ? GLEXT_GL_CLAMP_TO_EDGE : GLEXT_GL_CLAMP)));
-            glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_isRepeated ? GL_REPEAT : (GLEXT_texture_edge_clamp ? GLEXT_GL_CLAMP_TO_EDGE : GLEXT_GL_CLAMP)));
+            glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, m_isRepeated ? GL_REPEAT : (textureEdgeClamp ? GLEXT_GL_CLAMP_TO_EDGE : GLEXT_GL_CLAMP)));
+            glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_isRepeated ? GL_REPEAT : (textureEdgeClamp ? GLEXT_GL_CLAMP_TO_EDGE : GLEXT_GL_CLAMP)));
         }
     }
 }
@@ -588,6 +640,7 @@ Texture& Texture::operator =(const Texture& right)
     std::swap(m_isSmooth,      temp.m_isSmooth);
     std::swap(m_isRepeated,    temp.m_isRepeated);
     std::swap(m_pixelsFlipped, temp.m_pixelsFlipped);
+    std::swap(m_fboAttachment, temp.m_fboAttachment);
     m_cacheId = getUniqueId();
 
     return *this;

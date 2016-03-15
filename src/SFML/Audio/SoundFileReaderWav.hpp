@@ -74,6 +74,9 @@ public:
     ////////////////////////////////////////////////////////////
     /// \brief Change the current read position to the given sample offset
     ///
+    /// The sample offset takes the channels into account.
+    /// Offsets can be calculated like this:
+    /// `sampleNumber * sampleRate * channelCount`
     /// If the given offset exceeds to total number of samples,
     /// this function must jump to the end of the file.
     ///
@@ -111,6 +114,7 @@ private:
     InputStream* m_stream;         ///< Source stream to read from
     unsigned int m_bytesPerSample; ///< Size of a sample, in bytes
     Uint64       m_dataStart;      ///< Starting position of the audio data in the open file
+    Uint64       m_dataEnd;        ///< Position one byte past the end of the audio data in the open file
 };
 
 } // namespace priv

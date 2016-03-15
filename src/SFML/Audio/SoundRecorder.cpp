@@ -49,10 +49,10 @@ SoundRecorder::SoundRecorder() :
 m_thread            (&SoundRecorder::record, this),
 m_sampleRate        (0),
 m_processingInterval(milliseconds(100)),
-m_isCapturing       (false)
+m_isCapturing       (false),
+m_deviceName        (getDefaultDevice())
 {
-    // Set the device name to the default device
-    m_deviceName = getDefaultDevice();
+
 }
 
 
@@ -135,7 +135,7 @@ std::vector<std::string> SoundRecorder::getAvailableDevices()
 {
     std::vector<std::string> deviceNameList;
 
-    const ALchar *deviceList = alcGetString(NULL, ALC_CAPTURE_DEVICE_SPECIFIER);
+    const ALchar* deviceList = alcGetString(NULL, ALC_CAPTURE_DEVICE_SPECIFIER);
     if (deviceList)
     {
         while (*deviceList)
@@ -210,7 +210,7 @@ bool SoundRecorder::isAvailable()
 
 
 ////////////////////////////////////////////////////////////
-void SoundRecorder::setProcessingInterval(sf::Time interval)
+void SoundRecorder::setProcessingInterval(Time interval)
 {
     m_processingInterval = interval;
 }

@@ -103,18 +103,23 @@ bool ImageLoader::loadImageFromFile(const std::string& filename, std::vector<Uin
     pixels.clear();
 
     // Load the image and get a pointer to the pixels in memory
-    int width, height, channels;
+    int width = 0;
+    int height = 0;
+    int channels = 0;
     unsigned char* ptr = stbi_load(filename.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 
-    if (ptr && width && height)
+    if (ptr)
     {
         // Assign the image properties
         size.x = width;
         size.y = height;
 
-        // Copy the loaded pixels to the pixel buffer
-        pixels.resize(width * height * 4);
-        memcpy(&pixels[0], ptr, pixels.size());
+        if (width && height)
+        {
+            // Copy the loaded pixels to the pixel buffer
+            pixels.resize(width * height * 4);
+            memcpy(&pixels[0], ptr, pixels.size());
+        }
 
         // Free the loaded pixels (they are now in our own pixel buffer)
         stbi_image_free(ptr);
@@ -141,19 +146,24 @@ bool ImageLoader::loadImageFromMemory(const void* data, std::size_t dataSize, st
         pixels.clear();
 
         // Load the image and get a pointer to the pixels in memory
-        int width, height, channels;
+        int width = 0;
+        int height = 0;
+        int channels = 0;
         const unsigned char* buffer = static_cast<const unsigned char*>(data);
         unsigned char* ptr = stbi_load_from_memory(buffer, static_cast<int>(dataSize), &width, &height, &channels, STBI_rgb_alpha);
 
-        if (ptr && width && height)
+        if (ptr)
         {
             // Assign the image properties
             size.x = width;
             size.y = height;
 
-            // Copy the loaded pixels to the pixel buffer
-            pixels.resize(width * height * 4);
-            memcpy(&pixels[0], ptr, pixels.size());
+            if (width && height)
+            {
+                // Copy the loaded pixels to the pixel buffer
+                pixels.resize(width * height * 4);
+                memcpy(&pixels[0], ptr, pixels.size());
+            }
 
             // Free the loaded pixels (they are now in our own pixel buffer)
             stbi_image_free(ptr);
@@ -192,18 +202,23 @@ bool ImageLoader::loadImageFromStream(InputStream& stream, std::vector<Uint8>& p
     callbacks.eof  = &eof;
 
     // Load the image and get a pointer to the pixels in memory
-    int width, height, channels;
+    int width = 0;
+    int height = 0;
+    int channels = 0;
     unsigned char* ptr = stbi_load_from_callbacks(&callbacks, &stream, &width, &height, &channels, STBI_rgb_alpha);
 
-    if (ptr && width && height)
+    if (ptr)
     {
         // Assign the image properties
         size.x = width;
         size.y = height;
 
-        // Copy the loaded pixels to the pixel buffer
-        pixels.resize(width * height * 4);
-        memcpy(&pixels[0], ptr, pixels.size());
+        if (width && height)
+        {
+            // Copy the loaded pixels to the pixel buffer
+            pixels.resize(width * height * 4);
+            memcpy(&pixels[0], ptr, pixels.size());
+        }
 
         // Free the loaded pixels (they are now in our own pixel buffer)
         stbi_image_free(ptr);
@@ -227,35 +242,34 @@ bool ImageLoader::saveImageToFile(const std::string& filename, const std::vector
     if (!pixels.empty() && (size.x > 0) && (size.y > 0))
     {
         // Deduce the image type from its extension
-        if (filename.size() > 3)
-        {
-            // Extract the extension
-            std::string extension = toLower(filename.substr(filename.size() - 3));
 
-            if (extension == "bmp")
-            {
-                // BMP format
-                if (stbi_write_bmp(filename.c_str(), size.x, size.y, 4, &pixels[0]))
-                    return true;
-            }
-            else if (extension == "tga")
-            {
-                // TGA format
-                if (stbi_write_tga(filename.c_str(), size.x, size.y, 4, &pixels[0]))
-                    return true;
-            }
-            else if (extension == "png")
-            {
-                // PNG format
-                if (stbi_write_png(filename.c_str(), size.x, size.y, 4, &pixels[0], 0))
-                    return true;
-            }
-            else if (extension == "jpg")
-            {
-                // JPG format
-                if (writeJpg(filename, pixels, size.x, size.y))
-                    return true;
-            }
+        // Extract the extension
+        const std::size_t dot = filename.find_last_of('.');
+        const std::string extension = dot != std::string::npos ? toLower(filename.substr(dot + 1)) : "";
+
+        if (extension == "bmp")
+        {
+            // BMP format
+            if (stbi_write_bmp(filename.c_str(), size.x, size.y, 4, &pixels[0]))
+                return true;
+        }
+        else if (extension == "tga")
+        {
+            // TGA format
+            if (stbi_write_tga(filename.c_str(), size.x, size.y, 4, &pixels[0]))
+                return true;
+        }
+        else if (extension == "png")
+        {
+            // PNG format
+            if (stbi_write_png(filename.c_str(), size.x, size.y, 4, &pixels[0], 0))
+                return true;
+        }
+        else if (extension == "jpg" || extension == "jpeg")
+        {
+            // JPG format
+            if (writeJpg(filename, pixels, size.x, size.y))
+                return true;
         }
     }
 

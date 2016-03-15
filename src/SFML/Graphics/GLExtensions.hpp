@@ -45,6 +45,7 @@
     // Core since 1.0
     #define GLEXT_multitexture                        true
     #define GLEXT_texture_edge_clamp                  true
+    #define GLEXT_EXT_texture_edge_clamp              true
     #define GLEXT_blend_minmax                        true
     #define GLEXT_glClientActiveTexture               glClientActiveTexture
     #define GLEXT_glActiveTexture                     glActiveTexture
@@ -63,6 +64,7 @@
     #define GLEXT_glBlendEquation                     glBlendEquationOES
     #define GLEXT_GL_FUNC_ADD                         GL_FUNC_ADD_OES
     #define GLEXT_GL_FUNC_SUBTRACT                    GL_FUNC_SUBTRACT_OES
+    #define GLEXT_GL_FUNC_REVERSE_SUBTRACT            GL_FUNC_REVERSE_SUBTRACT_OES
 
     // The following extensions are optional.
 
@@ -108,6 +110,10 @@
     #define GLEXT_GL_FRAMEBUFFER_BINDING              GL_FRAMEBUFFER_BINDING_OES
     #define GLEXT_GL_INVALID_FRAMEBUFFER_OPERATION    GL_INVALID_FRAMEBUFFER_OPERATION_OES
 
+    // Core since 3.0 - EXT_sRGB
+    #define GLEXT_texture_sRGB                        GL_EXT_sRGB
+    #define GLEXT_GL_SRGB8_ALPHA8                     GL_SRGB8_ALPHA8_EXT
+
 #else
 
     #include <SFML/Graphics/GLLoader.hpp>
@@ -134,6 +140,9 @@
     #define GLEXT_texture_edge_clamp                  sfogl_ext_SGIS_texture_edge_clamp
     #define GLEXT_GL_CLAMP_TO_EDGE                    GL_CLAMP_TO_EDGE_SGIS
 
+    // Core since 1.2 - EXT_texture_edge_clamp
+    #define GLEXT_EXT_texture_edge_clamp              sfogl_ext_EXT_texture_edge_clamp
+
     // Core since 1.2 - EXT_blend_minmax
     #define GLEXT_blend_minmax                        sfogl_ext_EXT_blend_minmax
     #define GLEXT_glBlendEquation                     glBlendEquationEXT
@@ -142,6 +151,7 @@
     // Core since 1.2 - EXT_blend_subtract
     #define GLEXT_blend_subtract                      sfogl_ext_EXT_blend_subtract
     #define GLEXT_GL_FUNC_SUBTRACT                    GL_FUNC_SUBTRACT_EXT
+    #define GLEXT_GL_FUNC_REVERSE_SUBTRACT            GL_FUNC_REVERSE_SUBTRACT_EXT
 
     // Core since 1.3 - ARB_multitexture
     #define GLEXT_multitexture                        sfogl_ext_ARB_multitexture
@@ -172,6 +182,15 @@
     #define GLEXT_glUniform3f                         glUniform3fARB
     #define GLEXT_glUniform4f                         glUniform4fARB
     #define GLEXT_glUniform1i                         glUniform1iARB
+    #define GLEXT_glUniform2i                         glUniform2iARB
+    #define GLEXT_glUniform3i                         glUniform3iARB
+    #define GLEXT_glUniform4i                         glUniform4iARB
+    #define GLEXT_glUniform1fv                        glUniform1fvARB
+    #define GLEXT_glUniform2fv                        glUniform2fvARB
+    #define GLEXT_glUniform2iv                        glUniform2ivARB
+    #define GLEXT_glUniform3fv                        glUniform3fvARB
+    #define GLEXT_glUniform4fv                        glUniform4fvARB
+    #define GLEXT_glUniformMatrix3fv                  glUniformMatrix3fvARB
     #define GLEXT_glUniformMatrix4fv                  glUniformMatrix4fvARB
     #define GLEXT_glGetObjectParameteriv              glGetObjectParameterivARB
     #define GLEXT_glGetInfoLog                        glGetInfoLogARB
@@ -197,6 +216,10 @@
     #define GLEXT_blend_equation_separate             sfogl_ext_EXT_blend_equation_separate
     #define GLEXT_glBlendEquationSeparate             glBlendEquationSeparateEXT
 
+    // Core since 2.1 - EXT_texture_sRGB
+    #define GLEXT_texture_sRGB                        sfogl_ext_EXT_texture_sRGB
+    #define GLEXT_GL_SRGB8_ALPHA8                     GL_SRGB8_ALPHA8_EXT
+
     // Core since 3.0 - EXT_framebuffer_object
     #define GLEXT_framebuffer_object                  sfogl_ext_EXT_framebuffer_object
     #define GLEXT_glBindRenderbuffer                  glBindRenderbufferEXT
@@ -217,6 +240,10 @@
     #define GLEXT_GL_FRAMEBUFFER_COMPLETE             GL_FRAMEBUFFER_COMPLETE_EXT
     #define GLEXT_GL_FRAMEBUFFER_BINDING              GL_FRAMEBUFFER_BINDING_EXT
     #define GLEXT_GL_INVALID_FRAMEBUFFER_OPERATION    GL_INVALID_FRAMEBUFFER_OPERATION_EXT
+
+    // Core since 3.2 - ARB_geometry_shader4
+    #define GLEXT_geometry_shader4                    sfogl_ext_ARB_geometry_shader4
+    #define GLEXT_GL_GEOMETRY_SHADER                  GL_GEOMETRY_SHADER_ARB
 
 #endif
 

@@ -1,3 +1,74 @@
+SFML 2.3.2
+==========
+
+Also available on the website: http://www.sfml-dev.org/changelog.php#sfml-2.3.2
+
+General
+=======
+
+* Fixed an issue where FindSFML.cmake couldn't find older versions of SFML (#903)
+* Robust alCheck and glCheck macros (#917)
+* Fixed FindSFML.cmake to use the uppercase FLAC name (#923)
+* Added a CONTRIBUTING file so GitHub shows a message when creating a new issue (#932)
+
+
+Window
+======
+
+Bugfixes
+--------
+* [Linux] Fixed an issue where the keypad's key weren't being detected (#910)
+* [Linux] Revert to Xlib event handling (#934)
+* [Linux] Fixed XK_* inconsistency in InpuImpl.cpp (#947)
+* [Linux] Fix _NET_WM_PING messages not being replied to properly (#947)
+
+
+Graphics
+========
+
+Bugfixes
+--------
+* Fixed clear bug on RenderTextures (#915)
+* Fixed image file extension detection (#929, #930, #931)
+* Secure function against random data return (#935, #942)
+
+
+SFML 2.3.1
+==========
+
+Also available on the website: http://www.sfml-dev.org/changelog.php#sfml-2.3.1
+
+Window
+======
+
+Bugfixes
+--------
+* [Android] Make sure a window still exists before trying to access its dimensions (#854)
+* [Android] Added Android API level checks (#856)
+* [Android] Updated the JNI/event handling code (#906)
+* [Linux] Resized events are only spawned when the window size actually changes (#878, #893)
+* [Linux] Whitelisted X SHAPE events (#879, #883)
+* [Linux] Remap Unix keyboard when user changes layout (#895, #897)
+* [Linux] Fix undefined behavior in ewmhSupported() (#892, #901)
+
+
+Graphics
+========
+
+Bugfixes
+--------
+* Added support for GL_EXT_texture_edge_clamp for systems that don't expose GL_SGIS_texture_edge_clamp (#880, #882)
+
+
+Audio
+=====
+
+Bugfixes
+--------
+* [Android] Fixed audio files not loading (and possibly crashing) (#855, #887)
+
+
+
 SFML 2.3
 ========
 
